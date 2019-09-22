@@ -1,0 +1,30 @@
+version: '3'
+services:
+  client:
+    build: ./client
+    ports:
+      - 3000:3000
+    volumes:
+      - ./client:/app
+    command: yarn serve
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - ./api:/go/src/
+    depends_on:
+      - 'db'
+  db:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - 3336:3336
+    environment:
+      MYSQL_DATABASE: api_dev
+      MYSQL_ROOT_USERNAME: root
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - ./db:/data/db
